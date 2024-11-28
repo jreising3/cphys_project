@@ -130,3 +130,24 @@ class AndersonGraph:
         nx.draw(self.graph, self.pos, node_color = density, cmap = plt.cm.cividis, node_size = node_size, width = line_width)
         
         plt.show()
+
+
+    def calculate_entropy(self, state):
+        # Normalize the state
+        state = state / np.linalg.norm(state)
+        # Compute the density matrix
+        rho = np.outer(state, np.conj(state))
+        # Compute eigenvalues of the density matrix
+        eigenvalues = np.linalg.eigvalsh(rho)
+        # Compute von Neumann entropy
+        return -np.sum(eigenvalues * np.log2(eigenvalues + 1e-12))     
+
+            
+    def entropy_times(self,t_max,nt):
+
+       times = np.linspace(0, t_max, nt)
+       H=[]
+       for i in range(len(times)):
+           state=self._psi_at_t(times[i])
+           H.append(self.calculate_entropy(state))
+       plt.scatter(times,H)
