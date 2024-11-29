@@ -10,11 +10,10 @@ This project adds to the prior work "Tight Binding and Anderson Localization on 
 
 # Numerical Approach
 
-## The Tight Binding Model
 
-An electron can exist in finitely many discrete sites numbered $1 , 2 , \ldots , N$ with corresponding states $| 1 \rangle , | 2 \rangle , \ldots , | N \rangle$ (where $N$ is the total number of sites). Different sites have arbitrary connections to each other, with the connections forming a simple graph. This graph can then be represented by an $N \times N$ adjacency matrix.
+## Tight Binding Model
 
-The state of the electron is denoted $| \psi \rangle$ and is a normalized linear combination of the site states.
+The tight binding model is a way calculating electronic band structure. In this model the wave function is written for free atoms i.e LACO (Linear Combination of Atomic Oribtials) that satify Bloch's Thoerem. 
 
 ## The Tight Binding Hamiltonian
 
