@@ -36,4 +36,4 @@ However in our model we add in a time depent term into our hamilitoian. In order
 
 $$ c(t)= -\frac{i}{\hbar} \int^{t}_{0} dt'\langle n |H('t)| n\rangle $$
 
-#Basic Useage
+# Basic Useage
