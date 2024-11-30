@@ -133,6 +133,15 @@ class AndersonGraph:
 
 
     def calculate_entropy(self, state):
+        '''
+        Calculate the von Neumann entropy of a given quantum state.
+
+        Args:
+            state (ndarray): Quantum state vector.
+
+        Returns:
+            float: Von Neumann entropy of the given state.
+        '''
         # Normalize the state
         state = state / np.linalg.norm(state)
         # Compute the density matrix
@@ -144,10 +153,19 @@ class AndersonGraph:
 
             
     def entropy_times(self,t_max,nt):
+        '''
+        Calculate the von Neumann entropy of the quantum state at a sequence of times and plot the entropy as a function of time.
 
-       times = np.linspace(0, t_max, nt)
-       H=[]
-       for i in range(len(times)):
-           state=self._psi_at_t(times[i])
-           H.append(self.calculate_entropy(state))
-       plt.scatter(times,H)
+        Args:
+            t_max (float): Final time.
+            nt (int): Number of time steps.
+
+        Returns:
+            None: The method plots the entropy as a function of time.
+        '''
+        times = np.linspace(0, t_max, nt)
+        H=[]
+        for i in range(len(times)):
+            state=self.psi_at_t(times[i])
+            H.append(self.calculate_entropy(state))
+        plt.scatter(times,H)
