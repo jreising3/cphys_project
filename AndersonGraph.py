@@ -2,6 +2,8 @@ import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
 from scipy.linalg import expm
+import scipy.integrate as integrate
+from scipy.stats import entropy
 
 plt.style.use('dark_background')
 
@@ -16,11 +18,12 @@ class AndersonGraph:
         eps_range (array-like): range to draw random values of epsilon from to create a random diagonal on the hamiltonian.
         t_hop (float): hopping parameter.
         num_sites (int): number of lattice sites.
+        alpha: strength of the anharmonic term 
         binding (2D nd array): binding term of the hamiltonian (ie. not the hoppoing term).
         pos (dict): dict with nodes of self.graph as keys and positions as values.
     '''
 
-    def __init__(self, graph, psi_0, eps_range, t_hop):
+    def __init__(self, graph, psi_0, eps_range, t_hop,alpha):
         self.graph = graph
         self.psi_0 = psi_0
 
@@ -32,14 +35,14 @@ class AndersonGraph:
 
         self.eps_range = eps_range
         self.t_hop = t_hop
-
+        self.alpha=alpha
         self.binding = np.diagflat(np.random.uniform(*self.eps_range, size=self.num_sites))
         self.pos = nx.spring_layout(self.graph)
 
 
-    def _hamiltonian(self):
+    def _static_hamiltonian(self):
         '''
-        Construct the hamiltonian for the Anderson tight-binding model, a matrix representation in the occupancy site basis. 
+        Construct the the static hamiltonian for the Anderson tight-binding model. 
 
         Returns
             hamiltonian (2d ndarray): matrix representation of the hamiltonian in the lattice site basis.
@@ -48,9 +51,9 @@ class AndersonGraph:
         hopping = -self.t_hop * adjacency
 
         return self.binding + hopping
+        
     
-    
-    def _time_evolution_operator(self, time):
+    def _static_time_evolution_operator(self, time):
         '''
         Calculate the unitary time evolution operator for the given hamiltonian.
 
@@ -61,10 +64,34 @@ class AndersonGraph:
             U(t) (ndarray of size num_sites x num_sites): unitary time evolution operator. 
         '''
 
-        return expm(-1j * self._hamiltonian() * time)
+        return expm(-1j * self._static_hamiltonian() * time)
+
+    def _time_depent_evolution_part(self, time):
+         # Initialize the wavefunction list
+         psi_t = []
     
+         # Define the function to integrate
+         def u(t):
+            return (self.alpha * np.cos(t))**3
     
-    def psi_at_t(self, time):
+            # Perform the integration over time
+         delx, _ = integrate.quad(lambda t: np.real(u(t)), 0, time)  # Example: taking real part
+    
+         # Get the number of sites
+         n = self.num_sites
+
+         # Initialize psi_t with some initial values (e.g., zeros or random complex numbers)
+         psi_t = [0] * n  # Or use np.zeros(n, dtype=complex) for complex initialization
+
+         # Fill psi_t with new values based on evolution
+         for i in range(n):
+            # Update psi_t[i] with some evolution logic (e.g., depending on delx)
+            psi_t[i] = psi_t[i] + delx  # Example logic
+
+         return psi_t
+ 
+    
+    def _psi_at_t(self, time):
         '''
         Returns the wavefucntion, in the lattice site basis, at a given time t. 
 
@@ -75,7 +102,7 @@ class AndersonGraph:
             psi (1D ndarray of size num_sites): wavefunction at given time.
         '''
 
-        return self._time_evolution_operator(time) @ self.psi_0
+        return (self._static_time_evolution_operator(time) @ self.psi_0)+self._time_depent_evolution_part(time)
     
 
     def simulate(self, t_max, nt): #t_steps):
@@ -96,7 +123,7 @@ class AndersonGraph:
 
         for time in times:
             #self._time_evolution_operator(time) @ self.psi_0
-            history.append(self._time_evolution_operator(time) @ self.psi_0)
+            history.append((self._static_time_evolution_operator(time) @ self.psi_0)+self._time_depent_evolution_part(time))
         return history
     
 
@@ -108,7 +135,7 @@ class AndersonGraph:
         return nx.draw(self.graph)
 
 
-    def plot_density(self, t, node_size=10, line_width=1, layout=None):# axisstabilized = False):
+    def plot_density(self, t, node_size=10, line_width=2, layout=None):# axisstabilized = False):
         '''
         Plot the probability density, aka |psi(t)|^2
 
@@ -119,7 +146,7 @@ class AndersonGraph:
         #fig = plt.figure(figsize = (12,10))
         #psi_t = self._time_evolution(t) @ self.psi_0
         plt.style.use('dark_background')
-        psi_t = self.psi_at_t(t)
+        psi_t = self._psi_at_t(t)
         density = np.real(np.multiply(psi_t.conj(), psi_t))
         
         #plt.title("Wave function probability density at time " + str(t) + "\n p = " + str(self.p)) 
@@ -133,15 +160,6 @@ class AndersonGraph:
 
 
     def calculate_entropy(self, state):
-        '''
-        Calculate the von Neumann entropy of a given quantum state.
-
-        Args:
-            state (ndarray): Quantum state vector.
-
-        Returns:
-            float: Von Neumann entropy of the given state.
-        '''
         # Normalize the state
         state = state / np.linalg.norm(state)
         # Compute the density matrix
@@ -153,19 +171,10 @@ class AndersonGraph:
 
             
     def entropy_times(self,t_max,nt):
-        '''
-        Calculate the von Neumann entropy of the quantum state at a sequence of times and plot the entropy as a function of time.
 
-        Args:
-            t_max (float): Final time.
-            nt (int): Number of time steps.
-
-        Returns:
-            None: The method plots the entropy as a function of time.
-        '''
-        times = np.linspace(0, t_max, nt)
-        H=[]
-        for i in range(len(times)):
-            state=self.psi_at_t(times[i])
-            H.append(self.calculate_entropy(state))
-        plt.scatter(times,H)
+       times = np.linspace(0, t_max, nt)
+       H=[]
+       for i in range(len(times)):
+           state=self._psi_at_t(times[i])
+           H.append(self.calculate_entropy(state))
+       plt.scatter(times,H)
