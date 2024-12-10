@@ -25,7 +25,7 @@ The Hamiltonian for the tight binding model for a single electron can be written
 
 where $H$ is the electron Hamiltonian, $\epsilon$ is the binding energy, $\delta$ is the Kronecker delta, and $t$ is the hopping parameter. $n$ and $m$ refer to states associated with a particular site as in the tight binding formalism.
 
-Anderson localization can be demonstrated on this model when the diagonal of the Hamiltonian $H$ is randomized and if values of $\epsilon$ are randomly sampled from a uniform distribution on $[-W, \, W]$ where $W$ is known as the disorder parameter. In this case, larger $W$ correlates with increased localization.
+Anderson localization can be demonstrated on this model when the diagonal of the Hamiltonian $H$ is randomized and if values of $\epsilon$ are randomly sampled from a uniform distribution on $[-W, W]$ where $W$ is known as the disorder parameter. In this case, larger $W$ correlates with increased localization.
 ## Time Evoultion
 
 In the time indepent picture the using is evolved using the time evolution operator $U(t)$
@@ -36,4 +36,18 @@ However in our model we add in a time depent term into our hamilitoian. In order
 
 $$ c(t)= -\frac{i}{\hbar} \int^{t}_{0} dt'\langle n |H('t)| n\rangle $$
 
-# Basic Useage
+# Basic Use
+
+
+
+# Getting Started
+
+To use the notebooks here, create a `conda` environment using [qgraph_env.yml](qgraph_env.yml).
+
+Instructions for creating a `conda` environment from a yaml file are located [here](https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#creating-an-environment-from-an-environment-yml-file). This will automatically create an `conda` environment named `qgraph`, which you should use as your Jupyter kernel. 
+
+
+
+
+
+
