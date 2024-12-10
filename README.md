@@ -41,6 +41,20 @@ code examples can be found in [summary.ipynb](summary.ipynb).
 
 One can create a instance of the AndersonGraph object and then make a ring using NetworkX graph. Then feed the ring in as one of the arguments in the AndersonGraph constructor. Below we show a simple example. 
 
+```python
+import AndersonGraph as ag # The exact form of this may change based on the relative location of AndersonGraph.py
+
+N = 80 # Define number of sites
+psi_0 = np.zeros(N)
+psi_0[N//2] = 1 # Create wave function
+
+ring = nx.grid_graph(dim=[N], periodic=True) # Create ring
+
+anderson_ring = ag.AndersonGraph(graph=ring, psi_0=psi_0, eps_range=[-1, 1], t_hop=1) # Construct AndersonGraph object
+
+anderson_ring.plot_density(t=17) # Plot the time evolution of the system
+```
+
 
 # Getting Started
 
