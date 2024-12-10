@@ -50,7 +50,7 @@ psi_0[N//2] = 1 # Create wave function
 
 ring = nx.grid_graph(dim=[N], periodic=True) # Create ring
 
-anderson_ring = ag.AndersonGraph(graph=ring, psi_0=psi_0, eps_range=[-1, 1], t_hop=1) # Construct AndersonGraph object
+anderson_ring = ag.AndersonGraph(graph=ring, psi_0=psi_0, eps_range=[-1, 1], alpha = 0.5) # Construct AndersonGraph object
 
 anderson_ring.plot_density(t=17) # Plot the time evolution of the system
 ```
