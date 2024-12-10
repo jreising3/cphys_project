@@ -54,7 +54,7 @@ anderson_ring = ag.AndersonGraph(graph=ring, psi_0=psi_0, eps_range=[-1, 1], alp
 
 anderson_ring.plot_density(t=17) # Plot the time evolution of the system
 ```
-
+<img src="plots/ring_t_17.png" width="500">
 
 # Getting Started
 
