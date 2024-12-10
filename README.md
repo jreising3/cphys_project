@@ -37,6 +37,10 @@ However in our model we add in a time depent term into our hamilitoian. In order
 $$ c(t)= -\frac{i}{\hbar} \int^{t}_{0} dt'\langle n |H('t)| n\rangle $$
 
 # Basic Use
+code examples can be found in [summary.ipynb](summary.ipynb).
+
+One can create a instance of the AndersonGraph object and then make a ring using NetworkX graph. Then feed the ring in as one of the arguments in the AndersonGraph constructor. Below we show a simple example. 
+
 
 
 
